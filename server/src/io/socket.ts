@@ -8,6 +8,7 @@ import { TUserWithTeams } from "../utils/types";
 import { removeUserFromCache } from "../redis/data/redis.data";
 import { attachUserId, attachUserObject } from "./middleware/socket.middleware";
 import { handleEvents } from "./event-handlers/events";
+import { handleJoinTeam } from "./event-handlers/team-events";
 
 export function addSocketIO(
   server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
@@ -38,6 +39,10 @@ export function addSocketIO(
       points: 5, // 5 points
       duration: 1, // per second
     });
+
+    for (const team of user.teams) {
+      await handleJoinTeam({ teamId: team.id }, user, socket);
+    }
 
     handleEvents(socket, limiter, user);
 
