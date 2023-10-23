@@ -22,8 +22,8 @@ export async function handleJoinTeam(
 }
 
 export async function handleTeamMessage(payload: any, socket: Socket) {
-  const { message, teamId, userId, createdAt } = payload;
-  if (!message || !teamId || !userId || !createdAt) {
+  const { message, teamId, userId } = payload;
+  if (!message || !teamId || !userId) {
     return;
   }
 
@@ -33,7 +33,6 @@ export async function handleTeamMessage(payload: any, socket: Socket) {
     senderId: socket.id,
     userId,
     uniqueId,
-    createdAt,
   });
 
   const channel = `chat:team-${teamId}:messages`;
