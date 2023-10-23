@@ -1,10 +1,6 @@
 import { TEAM_PATTERN, MESSAGE_LIST_LIMIT } from "../../utils/constants";
-import AWS from "aws-sdk";
 import { addTeamMessageToList } from "../data/redis.data";
 import { io, pubClient } from "../../main";
-
-AWS.config.update({ region: "us-east-1" });
-const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 
 export function addRedisSubscriber() {
   const subClient = pubClient.duplicate();
@@ -64,17 +60,6 @@ export async function handleRedisTeamMessage(channel: string, payload: string) {
     uniqueId,
     createdAt,
   };
-
-  // Send to SQS
-  const params = {
-    MessageBody: JSON.stringify(messageData),
-    QueueUrl: process.env.AWS_SQS_URL ?? "",
-  };
-  sqs.sendMessage(params, (err, data) => {
-    if (err) {
-      console.error(err);
-    }
-  });
 
   await addTeamMessageToList(channel, messageData);
 
