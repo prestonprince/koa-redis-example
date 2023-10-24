@@ -1,5 +1,5 @@
 import "./Login.scss";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { TLoginResponse, useLogin } from "./store/login.api";
 import { useUserContext } from "../../context/util";
@@ -8,11 +8,17 @@ import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [username, setUsername] = useState<string>("");
-  const { setUser } = useUserContext();
+  const { user, setUser } = useUserContext();
 
   const { mutate, isLoading } = useLogin();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.isLoggedIn) {
+      navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

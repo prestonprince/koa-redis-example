@@ -39,6 +39,10 @@ export const Home = () => {
     socket?.on("connect", () => {
       console.log("connected to socket");
     });
+
+    socket?.on("message:tm", (data) => {
+      console.log(data);
+    });
   }, [socket]);
 
   useEffect(() => {
