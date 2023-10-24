@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
 
 import { useUserContext } from "../../context/util";
+import { Logout } from "../Logout/Logout";
 
 const SOCKET_URL = "ws://0.0.0.0:3001";
 
@@ -51,5 +52,10 @@ export const Home = () => {
     }
   }, [user, navigate]);
 
-  return <div>Home</div>;
+  return (
+    <div>
+      <h1>home</h1>
+      <Logout />
+    </div>
+  );
 };

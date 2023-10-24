@@ -40,6 +40,8 @@ export const UserContextProvider = (
   useEffect(() => {
     if (user !== null) {
       window.localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      window.localStorage.removeItem("user");
     }
   }, [user]);
 
