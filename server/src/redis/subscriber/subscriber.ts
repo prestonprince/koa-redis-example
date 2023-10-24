@@ -3,7 +3,11 @@ import {
   MESSAGE_LIST_LIMIT,
   PRESENCE_PATTERN,
 } from "../../utils/constants";
-import { addTeamMessageToList } from "../data/redis.data";
+import {
+  addTeamMessageToList,
+  checkListLength,
+  transferTeamMessages,
+} from "../data/redis.data";
 import { io, pubClient } from "../../main";
 
 export function addRedisSubscriber() {
@@ -75,6 +79,12 @@ export async function handleRedisTeamMessage(channel: string, payload: string) {
     uniqueId,
     createdAt,
   };
+
+  const listLength = await checkListLength(channel);
+
+  if (listLength >= MESSAGE_LIST_LIMIT) {
+    await transferTeamMessages(channel, listLength);
+  }
 
   await addTeamMessageToList(channel, messageData);
 
