@@ -58,16 +58,44 @@ export async function checkListLength(listName: string) {
 }
 
 export async function getUserFromCache(userId: string) {
-  const user = await dataWorker.get(userId);
+  const user = await dataWorker.get(`user-${userId}`);
   return user;
 }
 
 export async function setUserInCache(user: TUserWithTeams) {
   if (user) {
-    await dataWorker.set(String(user.id), JSON.stringify(user), "EX", 60 * 60);
+    const data = {
+      ...user,
+      heartbeat: Date.now(),
+    };
+    await dataWorker.set(
+      `user-${String(user.id)}`,
+      JSON.stringify(data),
+      "EX",
+      60 * 60
+    );
   }
 }
 
 export async function removeUserFromCache(userId: string) {
-  await dataWorker.del(userId);
+  await dataWorker.del(`user-${userId}`);
+}
+
+export async function updateHeartbeat(user: TUserWithTeams) {
+  if (user) {
+    const userId = String(user.id);
+
+    const userFromCache = await getUserFromCache(userId);
+    if (userFromCache) {
+      const userInfo = await JSON.parse(userFromCache);
+
+      const data = { ...userInfo, heartbeat: Date.now() };
+      await dataWorker.set(
+        `user-${String(user.id)}`,
+        JSON.stringify(data),
+        "EX",
+        60 * 60
+      );
+    }
+  }
 }

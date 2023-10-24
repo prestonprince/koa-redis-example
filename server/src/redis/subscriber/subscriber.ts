@@ -1,4 +1,8 @@
-import { TEAM_PATTERN, MESSAGE_LIST_LIMIT } from "../../utils/constants";
+import {
+  TEAM_PATTERN,
+  MESSAGE_LIST_LIMIT,
+  PRESENCE_PATTERN,
+} from "../../utils/constants";
 import { addTeamMessageToList } from "../data/redis.data";
 import { io, pubClient } from "../../main";
 
@@ -9,7 +13,12 @@ export function addRedisSubscriber() {
 
   // subscribe to team messages
   subClient.psubscribe(TEAM_PATTERN, (err, count) =>
-    handleSubscribeError(err, count)
+    handleSubscribeError(err, count, "team")
+  );
+
+  // subscribe to presence messages
+  subClient.psubscribe(PRESENCE_PATTERN, (err, count) =>
+    handleSubscribeError(err, count, "presence")
   );
 
   // handle message patterns
@@ -24,14 +33,15 @@ export function addRedisSubscriber() {
 
 export async function handleSubscribeError(
   err: Error | null | undefined,
-  count: unknown
+  count: unknown,
+  type: string
 ) {
   if (err) {
-    console.error(`Error subscribing to team channels`);
+    console.error(`Error subscribing to ${type} channels`);
     return;
   }
 
-  console.log(`${count} clients subscribed to team channels`);
+  console.log(`${count} clients subscribed to ${type} channels`);
 }
 
 export async function handleMessagePatterns(
@@ -43,6 +53,9 @@ export async function handleMessagePatterns(
     // handle team messages
     case TEAM_PATTERN:
       await handleRedisTeamMessage(channel, payload);
+      break;
+    case PRESENCE_PATTERN:
+      await handlePresenceMessage(channel, payload);
       break;
     // add more cases as needed
   }
@@ -73,4 +86,9 @@ export async function handleRedisTeamMessage(channel: string, payload: string) {
       }
     });
   }
+}
+
+export async function handlePresenceMessage(channel: string, payload: string) {
+  const data = JSON.parse(payload);
+  io.emit(channel, data);
 }
