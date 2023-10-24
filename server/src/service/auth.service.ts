@@ -28,7 +28,7 @@ export async function loginUser(data: TLoginData) {
       return { message: "User logged in", user };
     }
 
-    return { message: "User already logged in" };
+    return { message: "User already logged in", user };
   }
 
   const newUser = await db.user.create({
