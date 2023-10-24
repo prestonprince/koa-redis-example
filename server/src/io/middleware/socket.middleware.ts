@@ -11,7 +11,7 @@ export function attachUserId(
   next: (err?: ExtendedError | undefined) => void
 ) {
   // replace with jwt token
-  const userId = socket.request.headers.userid;
+  const userId = socket.handshake.query.userid;
 
   if (!userId) {
     next(new Error("unauthorized"));

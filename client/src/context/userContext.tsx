@@ -38,7 +38,9 @@ export const UserContextProvider = (
   const [user, setUser] = useState<TUser | null>(useLocalStorage("user", null));
 
   useEffect(() => {
-    window.localStorage.setItem("user", JSON.stringify(user));
+    if (user !== null) {
+      window.localStorage.setItem("user", JSON.stringify(user));
+    }
   }, [user]);
 
   return (
