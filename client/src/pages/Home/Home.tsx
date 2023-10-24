@@ -5,7 +5,7 @@ import io, { Socket } from "socket.io-client";
 
 import { useUserContext } from "../../context/util";
 import { Logout } from "../Logout/Logout";
-import { TeamList } from "../../components/TeamList";
+import { TeamList } from "../../components/TeamList/TeamList";
 
 const SOCKET_URL = "ws://0.0.0.0:3001";
 
