@@ -40,6 +40,7 @@ export function addSocketIO(
       duration: 1, // per second
     });
 
+    // auto join user's teams' rooms
     for (const team of user.teams) {
       await handleJoinTeam({ teamId: team.id }, user, socket);
     }

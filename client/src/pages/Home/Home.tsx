@@ -5,6 +5,7 @@ import io, { Socket } from "socket.io-client";
 
 import { useUserContext } from "../../context/util";
 import { Logout } from "../Logout/Logout";
+import { TeamList } from "../../components/TeamList";
 
 const SOCKET_URL = "ws://0.0.0.0:3001";
 
@@ -47,15 +48,14 @@ export const Home = () => {
     });
   }, [socket]);
 
-  useEffect(() => {
-    if (!user || !user.isLoggedIn) {
-      navigate("/login", { replace: true });
-    }
-  }, [user, navigate]);
+  if (!user || !user.isLoggedIn) {
+    navigate("/login", { replace: true });
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="home-container">
-      <h1>home</h1>
+      <TeamList userId={user.id} />
       <Logout />
     </div>
   );
