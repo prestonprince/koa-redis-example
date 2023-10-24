@@ -10,7 +10,6 @@ export function attachUserId(
   socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
   next: (err?: ExtendedError | undefined) => void
 ) {
-  // replace with jwt token
   const userId = socket.handshake.query.userid;
 
   if (!userId) {
