@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export interface TUser {
   id: number;
@@ -15,6 +15,16 @@ type UserContextProviderProps = {
   children: React.ReactElement;
 };
 
+function useLocalStorage(key: string, defaultValue: TUser | null) {
+  const data = window.localStorage.getItem(key);
+
+  if (!data) {
+    return defaultValue;
+  }
+
+  return JSON.parse(data);
+}
+
 export const UserContext = createContext<TUserContextProps>({
   user: null,
   setUser: () => {
@@ -25,7 +35,11 @@ export const UserContext = createContext<TUserContextProps>({
 export const UserContextProvider = (
   props: UserContextProviderProps
 ): React.ReactElement => {
-  const [user, setUser] = useState<TUser | null>(null);
+  const [user, setUser] = useState<TUser | null>(useLocalStorage("user", null));
+
+  useEffect(() => {
+    window.localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
