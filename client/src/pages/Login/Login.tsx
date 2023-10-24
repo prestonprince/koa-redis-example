@@ -23,7 +23,9 @@ export const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const successCallback = (data: AxiosResponse<TLoginResponse, unknown>) => {
+    const successCallback = async (
+      data: AxiosResponse<TLoginResponse, unknown>
+    ) => {
       setUser(data.data.user);
       navigate("/", { replace: true });
     };
@@ -33,7 +35,7 @@ export const Login = () => {
       return;
     }
 
-    await mutate({ username }, { onSuccess: successCallback });
+    mutate({ username }, { onSuccess: successCallback });
   };
   return (
     <section>

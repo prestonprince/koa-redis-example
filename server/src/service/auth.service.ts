@@ -20,12 +20,14 @@ export async function loginUser(data: TLoginData) {
   if (user) {
     // User not logged in
     if (!user.isLoggedIn) {
-      await db.user.update({
+      const updatedUser = await db.user.update({
         where: { username },
         data: { isLoggedIn: true },
       });
 
-      return { message: "User logged in", user };
+      console.log(updatedUser);
+
+      return { message: "User logged in", user: updatedUser };
     }
 
     return { message: "User already logged in", user };

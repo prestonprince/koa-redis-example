@@ -1,3 +1,4 @@
+import "./Home.scss";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
@@ -53,7 +54,7 @@ export const Home = () => {
   }, [user, navigate]);
 
   return (
-    <div>
+    <div className="home-container">
       <h1>home</h1>
       <Logout />
     </div>
