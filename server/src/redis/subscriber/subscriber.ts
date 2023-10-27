@@ -70,8 +70,6 @@ export async function handleRedisTeamMessage(channel: string, payload: string) {
   const { message, senderId, userId, uniqueId, createdAt } =
     JSON.parse(payload);
 
-  console.log("GOT TEAM MESSAGE IN SUBSCRIBER! MESSAGE: ", message);
-
   const messageData = {
     message,
     teamId,

@@ -20,8 +20,7 @@ export async function transferTeamMessages(
   for (let i = 0; i <= listLength; ++i) {
     const messageData = await dataWorker.lpop(channel);
     if (messageData) {
-      const { message, teamId, userId, uniqueId, createdAt } =
-        JSON.parse(messageData);
+      const { message, teamId, userId } = JSON.parse(messageData);
 
       const createdMessage = await createMessage({ userId: +userId, message });
       if (!createdMessage) {
